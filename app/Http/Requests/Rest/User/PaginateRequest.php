@@ -11,7 +11,7 @@ class PaginateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,8 @@ class PaginateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'page' => ['nullable', 'integer', 'min:1'],
+            'per_page' => ['nullable', 'integer', 'min:20', 'max:500'],
         ];
     }
 }

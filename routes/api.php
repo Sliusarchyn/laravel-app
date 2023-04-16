@@ -1,6 +1,8 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Rest\User\DeleteController;
+use App\Http\Controllers\Rest\User\PaginateController;
+use App\Http\Controllers\Rest\User\ShowController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +16,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::group(['prefix' => 'users'], function () {
+    Route::get('/', [PaginateController::class, '__invoke']);
+    Route::get('/{id}', [ShowController::class, '__invoke']);
+    Route::delete('/{id}', [DeleteController::class, '__invoke']);
 });

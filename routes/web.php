@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Web\IndexController;
+use App\Http\Controllers\Web\TermsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +15,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
+Route::get('/', [IndexController::class, '__invoke'])->name('index');
+Route::get('/terms', [TermsController::class, '__invoke'])->name('terms');
