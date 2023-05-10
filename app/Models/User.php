@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Casts\PhoneCast;
+use App\ValueObjects\Phone;
 use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -10,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property string $email
  * @property string $name
- * @property string $phone
+ * @property Phone $phone
  * @property CarbonInterface $created_at
  */
 class User extends Model
@@ -26,5 +28,9 @@ class User extends Model
         'name',
         'email',
         'phone',
+    ];
+
+    protected $casts = [
+        'phone' => PhoneCast::class
     ];
 }

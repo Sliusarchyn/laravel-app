@@ -3,7 +3,6 @@
 namespace App\ValueObjects;
 
 use InvalidArgumentException;
-use RuntimeException;
 
 class Phone
 {
@@ -13,7 +12,7 @@ class Phone
 
     public static function fromString(string $phone): Phone
     {
-        if (!preg_match('/^\+[0-9]{3}\d{2}\d{3}\d{2}\d{2}$/', $phone)) {
+        if (!preg_match('/^\+1\d{10}$/', $phone)) {
             throw new InvalidArgumentException('It is not valid phone value');
         }
 
@@ -23,11 +22,5 @@ class Phone
     public function toString(): string
     {
         return $this->phone;
-    }
-
-    public function getOperatorCode(): string
-    {
-        //TODO: Some implementation
-        throw new RuntimeException('Should be implemented before called');
     }
 }
