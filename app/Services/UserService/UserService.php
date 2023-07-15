@@ -4,16 +4,24 @@ declare(strict_types=1);
 
 namespace App\Services\UserService;
 
+use App\Contracts\Common\Dto\PaginationData;
+use App\Contracts\Repositories\UserRepository\UserRepositoryInterface;
 use App\Contracts\Services\UserService\UserServiceInterface;
 use App\Models\User;
 use App\ValueObjects\Phone;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use LogicException;
 
 class UserService implements UserServiceInterface
 {
-    public function __construct(private readonly User $user)
+    public function __construct(private readonly UserRepositoryInterface $userRepository)
     {
+    }
+
+    public function paginate(PaginationData $paginationData): LengthAwarePaginator
+    {
+        return $this->userRepository->paginate($paginationData);
     }
 
     /**

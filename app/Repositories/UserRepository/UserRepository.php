@@ -17,6 +17,10 @@ class UserRepository implements UserRepositoryInterface
     {
     }
 
+    /**
+     * @param PaginationData $paginationData
+     * @return LengthAwarePaginator<User>
+     */
     public function paginate(PaginationData $paginationData): LengthAwarePaginator
     {
         return $this->model

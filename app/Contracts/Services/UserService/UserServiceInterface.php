@@ -4,13 +4,21 @@ declare(strict_types=1);
 
 namespace App\Contracts\Services\UserService;
 
+use App\Contracts\Common\Dto\PaginationData;
 use App\Models\User;
 use App\ValueObjects\Phone;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use LogicException;
 
 interface UserServiceInterface
 {
+    /**
+     * @param PaginationData $paginationData
+     * @return LengthAwarePaginator
+     */
+    public function paginate(PaginationData $paginationData): LengthAwarePaginator;
+
     /**
      * @param Phone $phone
      * @return User

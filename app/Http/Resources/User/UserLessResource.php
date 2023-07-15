@@ -21,7 +21,7 @@ class UserLessResource extends JsonResource
     {
         return [
             'id' => $this->resource->id,
-            'email' => $this->resource->email,
+            'email' => $this->resource->phone->toString(),
             'name' => $this->resource->name,
             'created_at' => $this->resource->created_at->format(DateTimeInterface::ATOM)
         ];

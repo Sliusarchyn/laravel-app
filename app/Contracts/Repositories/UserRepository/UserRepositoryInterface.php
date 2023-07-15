@@ -13,6 +13,10 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 interface UserRepositoryInterface
 {
+    /**
+     * @param PaginationData $paginationData
+     * @return LengthAwarePaginator<User>
+     */
     public function paginate(PaginationData $paginationData): LengthAwarePaginator;
 
     /**

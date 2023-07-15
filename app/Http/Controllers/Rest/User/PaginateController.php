@@ -19,8 +19,8 @@ final class PaginateController extends Controller
     public function __invoke(PaginateRequest $request): JsonResponse
     {
         $usersPage = $this->userService->paginate(new PaginationData(
-            $request->get('page', 1),
-            $request->get('per_page', 20)
+            (int)$request->get('page', 1),
+            (int)$request->get('per_page', 20)
         ));
 
         return UserLessResource::collection($usersPage->items())
