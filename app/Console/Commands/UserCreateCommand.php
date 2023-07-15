@@ -2,16 +2,18 @@
 
 namespace App\Console\Commands;
 
-use App\Models\User;
+use App\Contracts\Services\UserService\UserServiceInterface;
 use App\ValueObjects\Phone;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\App;
 use InvalidArgumentException;
+use LogicException;
 
 class UserCreateCommand extends Command
 {
     protected $signature = 'users:create {name : User name} {phone : User phone}';
 
-    protected $description = 'Create user with name and phone';
+    protected $description = 'Create user with name, email and phone';
 
     public function handle(): int
     {
@@ -25,13 +27,16 @@ class UserCreateCommand extends Command
             return self::FAILURE;
         }
 
-        $user = new User();
+        /** @var UserServiceInterface $userService */
+        $userService = App::make(UserServiceInterface::class);
 
-        $user->name = $name;
-        $user->email = 'alex4@gmail.com';
-        $user->phone = $phone;
+        try {
+            $userService->create($name, $phone);
+        } catch (LogicException $e) {
+            $this->error($e->getMessage());
 
-        $user->save();
+            return self::FAILURE;
+        }
 
         $this->info('User successfully created!');
 

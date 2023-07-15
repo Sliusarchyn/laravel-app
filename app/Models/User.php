@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property int $id
- * @property string $email
  * @property string $name
  * @property Phone $phone
  * @property CarbonInterface $created_at
@@ -26,11 +25,10 @@ class User extends Model
      */
     protected $fillable = [
         'name',
-        'email',
         'phone',
     ];
 
     protected $casts = [
-        'phone' => PhoneCast::class
+        'phone' => PhoneCast::class,
     ];
 }

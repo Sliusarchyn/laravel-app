@@ -4,29 +4,24 @@ declare(strict_types=1);
 
 namespace App\Contracts\Services\UserService;
 
-use App\Contracts\Common\Dto\PaginationData;
-use App\Contracts\Services\UserService\Dto\CreateData;
-use App\Exceptions\UserAlreadyExistsException;
 use App\Models\User;
-use App\ValueObjects\Email;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use App\ValueObjects\Phone;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use LogicException;
 
 interface UserServiceInterface
 {
-    public function paginate(PaginationData $paginationData): LengthAwarePaginator;
-
     /**
-     * @param int $id
+     * @param Phone $phone
      * @return User
      * @throws ModelNotFoundException
      */
-    public function findById(int $id): User;
+    public function findByPhone(Phone $phone): User;
 
     /**
-     * @throws UserAlreadyExistsException
+     * @throws LogicException
      */
-    public function create(CreateData $createData): User;
+    public function create(string $name, Phone $phone): User;
 
     /**
      * @param int $id
@@ -34,10 +29,4 @@ interface UserServiceInterface
      * @throws ModelNotFoundException
      */
     public function deleteById(int $id): void;
-
-    /**
-     * @param Email $email
-     * @throws ModelNotFoundException
-     */
-    public function deleteByEmail(Email $email): void;
 }

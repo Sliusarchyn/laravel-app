@@ -7,6 +7,7 @@ namespace App\Contracts\Repositories\UserRepository;
 use App\Contracts\Common\Dto\PaginationData;
 use App\Models\User;
 use App\ValueObjects\Email;
+use App\ValueObjects\Phone;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -22,11 +23,11 @@ interface UserRepositoryInterface
     public function findById(int $id): User;
 
     /**
-     * @param Email $email
+     * @param Phone $phone
      * @return User
      * @throws ModelNotFoundException
      */
-    public function findByEmail(Email $email): User;
+    public function findByPhone(Phone $phone): User;
 
     public function save(User $user): User;
 

@@ -7,7 +7,7 @@ namespace App\Repositories\UserRepository;
 use App\Contracts\Common\Dto\PaginationData;
 use App\Contracts\Repositories\UserRepository\UserRepositoryInterface;
 use App\Models\User;
-use App\ValueObjects\Email;
+use App\ValueObjects\Phone;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -38,16 +38,16 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
-     * @param Email $email
+     * @param Phone $phone
      * @return User
      * @throws ModelNotFoundException
      */
-    public function findByEmail(Email $email): User
+    public function findByPhone(Phone $phone): User
     {
         /** @noinspection PhpIncompatibleReturnTypeInspection */
         return $this->model
             ->newQuery()
-            ->where('email', '=', $email->toString())
+            ->where('email', '=', $phone->toString())
             ->firstOrFail();
     }
 

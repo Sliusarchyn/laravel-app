@@ -1,15 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers\Rest\User;
 
-use App\Exceptions\UserAlreadyExistsException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Rest\User\CreateRequest;
-use App\Http\Resources\User\UserResource;
-use App\Contracts\Services\UserService\Dto\CreateData;
 use App\Contracts\Services\UserService\UserServiceInterface;
-use App\ValueObjects\Email;
 use App\ValueObjects\Phone;
+use DateTimeInterface;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -19,19 +18,18 @@ final class CreateController extends Controller
     {
     }
 
-    /**
-     * @throws UserAlreadyExistsException
-     */
     public function __invoke(CreateRequest $request): JsonResponse
     {
-        $data = new CreateData(
-            Email::fromString($request->get('email')),
-            $request->get('name'),
-            Phone::fromString($request->get('phone'))
-        );
+        $name = $request->get('name');
+        $phone = Phone::fromString($request->get('phone'));
 
-        return UserResource::make($this->userService->create($data))
-            ->response()
-            ->setStatusCode(Response::HTTP_CREATED);
+        $user = $this->userService->create($name, $phone);
+
+        return new JsonResponse([
+            'id' => $user->id,
+            'name' => $user->name,
+            'phone' => $user->phone->toString(),
+            'created_at' => $user->created_at->format(DateTimeInterface::ATOM),
+        ], Response::HTTP_CREATED);
     }
 }
