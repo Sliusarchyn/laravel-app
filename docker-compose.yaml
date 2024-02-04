@@ -1,6 +1,37 @@
 version: '3.8'
 
 services:
+  nginx:
+    build:
+      context: ./
+      dockerfile: docker/nginx/Dockerfile
+    restart: unless-stopped
+    volumes:
+      - ./:/var/www/
+      - .data/nginx/logs/:/var/log/nginx
+    ports:
+      - "8080:80"
+    working_dir: /var/www
+    networks:
+      - laravel_repository
+    links:
+      - php
+    depends_on:
+      - php
+  php:
+    build:
+      context: ./
+      dockerfile: docker/php/Dockerfile
+    restart: unless-stopped
+    volumes:
+      - ./:/var/www/
+    working_dir: /var/www
+    networks:
+      - laravel_repository
+    depends_on:
+      - mysql
+    links:
+      - mysql
   mysql:
     image: mysql:8.0
     restart: unless-stopped
@@ -14,3 +45,12 @@ services:
       MYSQL_ROOT_HOST: "%"
     volumes:
       - .data/mysql:/var/lib/mysql
+    networks:
+      - laravel_repository
+networks:
+  laravel_repository:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.158.1.0/24
