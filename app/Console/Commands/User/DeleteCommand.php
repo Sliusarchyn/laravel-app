@@ -40,6 +40,10 @@ class DeleteCommand extends Command
             $this->info("User with phone:{$phone->toString()} successfully deleted!");
         } catch (ModelNotFoundException) {
             $this->error('Can\'t find user with this phone number.');
+
+            return self::FAILURE;
         }
+
+        return self::SUCCESS;
     }
 }
