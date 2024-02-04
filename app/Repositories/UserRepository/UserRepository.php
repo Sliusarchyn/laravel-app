@@ -8,6 +8,7 @@ use App\Contracts\Common\Dto\PaginationData;
 use App\Contracts\Repositories\UserRepository\Dto\Filter;
 use App\Contracts\Repositories\UserRepository\Dto\UserPaginatedData;
 use App\Contracts\Repositories\UserRepository\UserRepositoryInterface;
+use App\Exceptions\User\UserNotFoundException;
 use App\Models\User;
 use App\ValueObjects\Phone;
 use Illuminate\Database\Eloquent\Builder;
@@ -45,28 +46,36 @@ readonly class UserRepository implements UserRepositoryInterface
     /**
      * @param int $id
      * @return User
-     * @throws ModelNotFoundException
+     * @throws UserNotFoundException
      */
     public function findById(int $id): User
     {
-        /** @noinspection PhpIncompatibleReturnTypeInspection */
-        return $this->model
-            ->newQuery()
-            ->findOrFail($id);
+        try {
+            /** @noinspection PhpIncompatibleReturnTypeInspection */
+            return $this->model
+                ->newQuery()
+                ->findOrFail($id);
+        } catch (ModelNotFoundException $e) {
+            throw new UserNotFoundException($e->getMessage());
+        }
     }
 
     /**
      * @param Phone $phone
      * @return User
-     * @throws ModelNotFoundException
+     * @throws UserNotFoundException
      */
     public function findByPhone(Phone $phone): User
     {
-        /** @noinspection PhpIncompatibleReturnTypeInspection */
-        return $this->model
-            ->newQuery()
-            ->where('phone', '=', $phone->toString())
-            ->firstOrFail();
+        try {
+            /** @noinspection PhpIncompatibleReturnTypeInspection */
+            return $this->model
+                ->newQuery()
+                ->where('phone', '=', $phone->toString())
+                ->firstOrFail();
+        } catch (ModelNotFoundException $e) {
+            throw new UserNotFoundException($e->getMessage());
+        }
     }
 
     /**

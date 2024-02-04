@@ -7,9 +7,9 @@ namespace App\Contracts\Repositories\UserRepository;
 use App\Contracts\Common\Dto\PaginationData;
 use App\Contracts\Repositories\UserRepository\Dto\Filter;
 use App\Contracts\Repositories\UserRepository\Dto\UserPaginatedData;
+use App\Exceptions\User\UserNotFoundException;
 use App\Models\User;
 use App\ValueObjects\Phone;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 interface UserRepositoryInterface
 {
@@ -23,14 +23,14 @@ interface UserRepositoryInterface
     /**
      * @param int $id
      * @return User
-     * @throws ModelNotFoundException
+     * @throws UserNotFoundException
      */
     public function findById(int $id): User;
 
     /**
      * @param Phone $phone
      * @return User
-     * @throws ModelNotFoundException
+     * @throws UserNotFoundException
      */
     public function findByPhone(Phone $phone): User;
 
