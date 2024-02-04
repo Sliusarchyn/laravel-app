@@ -2,6 +2,7 @@
 
 namespace App\Rules;
 
+use App\ValueObjects\Phone;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Translation\PotentiallyTranslatedString;
@@ -17,7 +18,7 @@ class PhoneRule implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if (!preg_match('/^\+[0-9]{3}\d{2}\d{3}\d{2}\d{2}$/', $value)) {
+        if (!is_string($value) || !preg_match(Phone::VALIDATION_REGEX, $value)) {
             $fail('The :attribute should be a valid phone number.');
         }
     }

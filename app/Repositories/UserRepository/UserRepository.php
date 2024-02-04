@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace App\Repositories\UserRepository;
 
 use App\Contracts\Common\Dto\PaginationData;
+use App\Contracts\Repositories\UserRepository\Dto\Filter;
 use App\Contracts\Repositories\UserRepository\UserRepositoryInterface;
 use App\Models\User;
+use App\Repositories\UserRepository\Dto\UserPaginatedData;
 use App\ValueObjects\Phone;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class UserRepository implements UserRepositoryInterface
@@ -19,13 +21,25 @@ class UserRepository implements UserRepositoryInterface
 
     /**
      * @param PaginationData $paginationData
-     * @return LengthAwarePaginator<User>
+     * @param Filter|null $filter
+     * @return UserPaginatedData
      */
-    public function paginate(PaginationData $paginationData): LengthAwarePaginator
+    public function paginate(PaginationData $paginationData, ?Filter $filter = null): UserPaginatedData
     {
-        return $this->model
-            ->newQuery()
-            ->paginate($paginationData->perPage, ['*'], 'page', $paginationData->page);
+        $query = $this->model->newQuery();
+
+        if (null !== $filter) {
+            $query = $this->parseFilterForQuery($query, $filter);
+        }
+
+        $paginatedData = $query->paginate($paginationData->perPage, ['*'], 'page', $paginationData->page);
+
+        return new UserPaginatedData(
+            $paginatedData->items(),
+            $paginatedData->currentPage(),
+            $paginatedData->perPage(),
+            $paginatedData->total()
+        );
     }
 
     /**
@@ -51,10 +65,14 @@ class UserRepository implements UserRepositoryInterface
         /** @noinspection PhpIncompatibleReturnTypeInspection */
         return $this->model
             ->newQuery()
-            ->where('email', '=', $phone->toString())
+            ->where('phone', '=', $phone->toString())
             ->firstOrFail();
     }
 
+    /**
+     * @param User $user
+     * @return User
+     */
     public function save(User $user): User
     {
         $user->save();
@@ -62,8 +80,28 @@ class UserRepository implements UserRepositoryInterface
         return $user;
     }
 
+    /**
+     * @param User $user
+     * @return void
+     */
     public function delete(User $user): void
     {
         $user->delete();
+    }
+
+    /**
+     * @param Builder $query
+     * @param Filter $filter
+     * @return Builder
+     */
+    protected function parseFilterForQuery(Builder $query, Filter $filter): Builder
+    {
+        return $query->when(null !== $filter->name, function (Builder $query) use ($filter) {
+            $name = strtolower($filter->name);
+
+            return $query->whereRaw('LOWER(name) LIKE ?', "%$name%");
+        })->when(null !== $filter->phone, function (Builder $query) use ($filter) {
+            return $query->where('phone', 'LIKE', "%{$filter->phone}%");
+        });
     }
 }

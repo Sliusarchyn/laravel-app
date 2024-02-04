@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Rest\User;
 
+use App\Contracts\Repositories\UserRepository\Dto\Filter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Rest\User\PaginateRequest;
 use App\Http\Resources\User\UserLessResource;
@@ -18,17 +19,25 @@ final class PaginateController extends Controller
 
     public function __invoke(PaginateRequest $request): JsonResponse
     {
-        $usersPage = $this->userService->paginate(new PaginationData(
-            (int)$request->get('page', 1),
-            (int)$request->get('per_page', 20)
-        ));
+        if ($request->has('filter')) {
+            $filter = Filter::fromArray($request->validated('filter'));
+        } else {
+            $filter = null;
+        }
 
-        return UserLessResource::collection($usersPage->items())
+        $usersPage = $this->userService->paginate(
+            new PaginationData(
+                (int)$request->get('page', 1),
+                (int)$request->get('per_page', 20)
+            ),
+            $filter
+        );
+
+        return UserLessResource::collection($usersPage->items)
             ->additional([
-                'total' => $usersPage->total(),
-                'current_page' => $usersPage->currentPage(),
-                'last_page' => $usersPage->lastPage(),
-                'per_page' => $usersPage->perPage()
+                'total' => $usersPage->total,
+                'current_page' => $usersPage->page,
+                'per_page' => $usersPage->perPage
             ])
             ->response()
             ->setStatusCode(Response::HTTP_OK);

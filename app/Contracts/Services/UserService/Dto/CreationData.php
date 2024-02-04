@@ -6,7 +6,7 @@ namespace App\Contracts\Services\UserService\Dto;
 
 use App\ValueObjects\Phone;
 
-class CreateData
+class CreationData
 {
     public function __construct(
         public readonly string $name,

@@ -22,7 +22,7 @@ class UserResource extends JsonResource
         return [
             'id' => $this->resource->id,
             'name' => $this->resource->name,
-            'phone' => $this->resource->phone,
+            'phone' => $this->resource->phone->toString(),
             'created_at' => $this->resource->created_at->format(DateTimeInterface::ATOM),
         ];
     }

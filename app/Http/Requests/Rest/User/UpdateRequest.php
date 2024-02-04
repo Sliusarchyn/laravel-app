@@ -8,7 +8,7 @@ use App\Rules\PhoneRule;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateRequest extends FormRequest
+class UpdateRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -18,8 +18,8 @@ class CreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'between:3,255'],
-            'phone' => ['required', new PhoneRule()],
+            'name' => ['nullable', 'string', 'between:3,255'],
+            'phone' => ['nullable', new PhoneRule()],
         ];
     }
 }

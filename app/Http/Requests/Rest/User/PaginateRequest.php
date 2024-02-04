@@ -24,6 +24,9 @@ class PaginateRequest extends FormRequest
         return [
             'page' => ['nullable', 'integer', 'min:1'],
             'per_page' => ['nullable', 'integer', 'min:20', 'max:500'],
+            'filter' => ['nullable', 'array'],
+            'filter.name' => ['nullable', 'string', 'between:2,255'],
+            'filter.phone' => ['nullable', 'string', 'between:2,15'],
         ];
     }
 }

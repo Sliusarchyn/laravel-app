@@ -15,6 +15,8 @@ final class ShowController extends Controller
 
     public function __invoke(int $id): JsonResponse
     {
-        return UserResource::make($this->userService->findById($id))->response();
+        $user = $this->userService->findById($id);
+
+        return UserResource::make($user)->response();
     }
 }

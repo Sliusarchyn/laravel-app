@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Rest\User;
 
+use App\Contracts\Services\UserService\Dto\CreationData;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Rest\User\CreateRequest;
 use App\Contracts\Services\UserService\UserServiceInterface;
@@ -23,7 +24,7 @@ final class CreateController extends Controller
         $name = $request->get('name');
         $phone = Phone::fromString($request->get('phone'));
 
-        $user = $this->userService->create($name, $phone);
+        $user = $this->userService->create(new CreationData($name, $phone));
 
         return new JsonResponse([
             'id' => $user->id,

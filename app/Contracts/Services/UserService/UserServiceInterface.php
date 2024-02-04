@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace App\Contracts\Services\UserService;
 
 use App\Contracts\Common\Dto\PaginationData;
+use App\Contracts\Repositories\UserRepository\Dto\Filter;
+use App\Contracts\Services\UserService\Dto\CreationData;
+use App\Contracts\Services\UserService\Dto\UpdateData;
 use App\Models\User;
+use App\Repositories\UserRepository\Dto\UserPaginatedData;
 use App\ValueObjects\Phone;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use LogicException;
 
@@ -15,21 +18,29 @@ interface UserServiceInterface
 {
     /**
      * @param PaginationData $paginationData
-     * @return LengthAwarePaginator
+     * @param Filter|null $filter
+     * @return UserPaginatedData<User>
      */
-    public function paginate(PaginationData $paginationData): LengthAwarePaginator;
+    public function paginate(PaginationData $paginationData, ?Filter $filter = null): UserPaginatedData;
 
     /**
-     * @param Phone $phone
+     * @param int $userId
      * @return User
      * @throws ModelNotFoundException
      */
-    public function findByPhone(Phone $phone): User;
+    public function findById(int $userId): User;
 
     /**
      * @throws LogicException
      */
-    public function create(string $name, Phone $phone): User;
+    public function create(CreationData $data): User;
+
+    /**
+     * @param int $id
+     * @param UpdateData $data
+     * @return User
+     */
+    public function update(int $id, UpdateData $data): User;
 
     /**
      * @param int $id
@@ -37,4 +48,10 @@ interface UserServiceInterface
      * @throws ModelNotFoundException
      */
     public function deleteById(int $id): void;
+
+    /**
+     * @param Phone $phone
+     * @return void
+     */
+    public function deleteByPhone(Phone $phone): void;
 }

@@ -1,56 +1,46 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Console\Commands\User;
 
-use App\Contracts\Services\UserService\Dto\CreateData;
+use App\Contracts\Services\UserService\Dto\CreationData;
 use App\Contracts\Services\UserService\UserServiceInterface;
-use App\Exceptions\UserAlreadyExistsException;
-use App\ValueObjects\Email;
 use App\ValueObjects\Phone;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\App;
+use InvalidArgumentException;
+use LogicException;
 
 class CreateCommand extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'users:create1';
+    protected $signature = 'users:create {name : User name} {phone : User phone}';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Create new user';
+    protected $description = 'Create user with name, email and phone';
 
-    /**
-     * Execute the console command.
-     */
-    public function handle()
+    public function handle(): int
     {
-        $name = $this->ask('Enter user name');
-        $email = Email::fromString($this->ask('Enter user email'));
-        $phone = Phone::fromString($this->ask('Enter user phone (with +, +380...)'));
+        $name = $this->argument('name');
+
+        try {
+            $phone = Phone::fromString($this->argument('phone'));
+        } catch (InvalidArgumentException $e) {
+            $this->error($e->getMessage());
+
+            return self::FAILURE;
+        }
 
         /** @var UserServiceInterface $userService */
         $userService = App::make(UserServiceInterface::class);
 
-        $createData = new CreateData(
-            $email,
-            $name,
-            $phone
-        );
-
         try {
-            $userService->create($createData);
-            $this->info("User with email:{$email->toString()} successfully created!");
-        } catch (UserAlreadyExistsException $e) {
+            $userService->create(new CreationData($name, $phone));
+        } catch (LogicException $e) {
             $this->error($e->getMessage());
+
+            return self::FAILURE;
         }
+
+        $this->info('User successfully created!');
+
+        return self::SUCCESS;
     }
 }

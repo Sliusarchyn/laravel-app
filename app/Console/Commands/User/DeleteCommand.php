@@ -3,7 +3,7 @@
 namespace App\Console\Commands\User;
 
 use App\Contracts\Services\UserService\UserServiceInterface;
-use App\ValueObjects\Email;
+use App\ValueObjects\Phone;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\App;
@@ -22,24 +22,24 @@ class DeleteCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Delete user by email';
+    protected $description = 'Delete user by phone';
 
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): int
     {
-        $email = Email::fromString($this->ask('Enter user email'));
+        $phone = Phone::fromString($this->ask('Enter user phone'));
 
         /** @var UserServiceInterface $userService */
         $userService = App::make(UserServiceInterface::class);
 
         try {
-            $userService->deleteByEmail($email);
+            $userService->deleteByPhone($phone);
 
-            $this->info("User with email:{$email->toString()} successfully deleted!");
+            $this->info("User with phone:{$phone->toString()} successfully deleted!");
         } catch (ModelNotFoundException) {
-            $this->error('Can\'t find user with this email.');
+            $this->error('Can\'t find user with this phone number.');
         }
     }
 }
