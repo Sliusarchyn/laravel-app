@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Repositories\UserRepository\Dto;
+namespace App\Contracts\Repositories\UserRepository\Dto;
 
 use App\Contracts\Common\Dto\PaginatedData;
 use App\Models\User;

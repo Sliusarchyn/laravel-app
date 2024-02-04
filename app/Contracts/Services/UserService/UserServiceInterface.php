@@ -6,10 +6,10 @@ namespace App\Contracts\Services\UserService;
 
 use App\Contracts\Common\Dto\PaginationData;
 use App\Contracts\Repositories\UserRepository\Dto\Filter;
+use App\Contracts\Repositories\UserRepository\Dto\UserPaginatedData;
 use App\Contracts\Services\UserService\Dto\CreationData;
 use App\Contracts\Services\UserService\Dto\UpdateData;
 use App\Models\User;
-use App\Repositories\UserRepository\Dto\UserPaginatedData;
 use App\ValueObjects\Phone;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use LogicException;

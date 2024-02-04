@@ -6,9 +6,9 @@ namespace App\Repositories\UserRepository;
 
 use App\Contracts\Common\Dto\PaginationData;
 use App\Contracts\Repositories\UserRepository\Dto\Filter;
+use App\Contracts\Repositories\UserRepository\Dto\UserPaginatedData;
 use App\Contracts\Repositories\UserRepository\UserRepositoryInterface;
 use App\Models\User;
-use App\Repositories\UserRepository\Dto\UserPaginatedData;
 use App\ValueObjects\Phone;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\ModelNotFoundException;

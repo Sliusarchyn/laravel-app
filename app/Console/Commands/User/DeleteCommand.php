@@ -7,6 +7,7 @@ use App\ValueObjects\Phone;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\App;
+use InvalidArgumentException;
 
 class DeleteCommand extends Command
 {
@@ -15,7 +16,7 @@ class DeleteCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'users:delete';
+    protected $signature = 'users:delete {phone : User phone}';
 
     /**
      * The console command description.
@@ -29,7 +30,13 @@ class DeleteCommand extends Command
      */
     public function handle(): int
     {
-        $phone = Phone::fromString($this->ask('Enter user phone'));
+        try {
+            $phone = Phone::fromString($this->argument('phone'));
+        } catch (InvalidArgumentException $e) {
+            $this->error($e->getMessage());
+
+            return self::FAILURE;
+        }
 
         /** @var UserServiceInterface $userService */
         $userService = App::make(UserServiceInterface::class);
