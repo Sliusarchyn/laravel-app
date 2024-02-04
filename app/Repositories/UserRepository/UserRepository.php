@@ -13,9 +13,9 @@ use App\ValueObjects\Phone;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class UserRepository implements UserRepositoryInterface
+readonly class UserRepository implements UserRepositoryInterface
 {
-    public function __construct(private readonly User $model)
+    public function __construct(private User $model)
     {
     }
 

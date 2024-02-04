@@ -16,9 +16,9 @@ use App\ValueObjects\Phone;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use LogicException;
 
-class UserService implements UserServiceInterface
+readonly class UserService implements UserServiceInterface
 {
-    public function __construct(private readonly UserRepositoryInterface $userRepository)
+    public function __construct(private UserRepositoryInterface $userRepository)
     {
     }
 

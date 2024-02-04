@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Contracts\Repositories\UserRepository\Dto;
 
-class Filter
+readonly class Filter
 {
     private function __construct(
-        public readonly ?string $name,
-        public readonly ?string $phone,
+        public ?string $name,
+        public ?string $phone,
     ) {
     }
 
