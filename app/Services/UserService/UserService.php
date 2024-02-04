@@ -11,9 +11,9 @@ use App\Contracts\Repositories\UserRepository\UserRepositoryInterface;
 use App\Contracts\Services\UserService\Dto\CreationData;
 use App\Contracts\Services\UserService\Dto\UpdateData;
 use App\Contracts\Services\UserService\UserServiceInterface;
+use App\Exceptions\User\UserNotFoundException;
 use App\Models\User;
 use App\ValueObjects\Phone;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use LogicException;
 
 readonly class UserService implements UserServiceInterface
@@ -35,7 +35,7 @@ readonly class UserService implements UserServiceInterface
     /**
      * @param int $userId
      * @return User
-     * @throws ModelNotFoundException
+     * @throws UserNotFoundException
      */
     public function findById(int $userId): User
     {
@@ -43,14 +43,15 @@ readonly class UserService implements UserServiceInterface
     }
 
     /**
-     * @throws LogicException
+     * @param CreationData $data
+     * @return User
      */
     public function create(CreationData $data): User
     {
         try {
             $this->userRepository->findByPhone($data->phone);
             throw new LogicException('User with this phone already exists!');
-        } catch (ModelNotFoundException $e) {
+        } catch (UserNotFoundException $e) {
         }
 
         $user = new User();
@@ -61,6 +62,12 @@ readonly class UserService implements UserServiceInterface
         return $this->userRepository->save($user);
     }
 
+    /**
+     * @param int $id
+     * @param UpdateData $data
+     * @return User
+     * @throws UserNotFoundException
+     */
     public function update(int $id, UpdateData $data): User
     {
         $user = $this->userRepository->findById($id);
@@ -74,7 +81,7 @@ readonly class UserService implements UserServiceInterface
                 if ($userWithPhone->id !== $id) {
                     throw new LogicException('User with this phone already exists!');
                 }
-            } catch (ModelNotFoundException $e) {
+            } catch (UserNotFoundException $e) {
             }
 
             $user->phone = $data->phone;
@@ -87,7 +94,7 @@ readonly class UserService implements UserServiceInterface
     /**
      * @param int $id
      * @return void
-     * @throws ModelNotFoundException
+     * @throws UserNotFoundException
      */
     public function deleteById(int $id): void
     {
@@ -99,6 +106,7 @@ readonly class UserService implements UserServiceInterface
     /**
      * @param Phone $phone
      * @return void
+     * @throws UserNotFoundException
      */
     public function deleteByPhone(Phone $phone): void
     {

@@ -3,9 +3,9 @@
 namespace App\Console\Commands\User;
 
 use App\Contracts\Services\UserService\UserServiceInterface;
+use App\Exceptions\User\UserNotFoundException;
 use App\ValueObjects\Phone;
 use Illuminate\Console\Command;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\App;
 use InvalidArgumentException;
 
@@ -45,7 +45,7 @@ class DeleteCommand extends Command
             $userService->deleteByPhone($phone);
 
             $this->info("User with phone:{$phone->toString()} successfully deleted!");
-        } catch (ModelNotFoundException) {
+        } catch (UserNotFoundException) {
             $this->error('Can\'t find user with this phone number.');
 
             return self::FAILURE;
