@@ -1,6 +1,6 @@
 FROM php:8.2-fpm-alpine
 
-COPY docker/app/php.ini "$PHP_INI_DIR/php.ini"
+COPY docker/php/php.ini "$PHP_INI_DIR/php.ini"
 
 # Get PHP extensions installer
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
@@ -16,7 +16,7 @@ RUN install-php-extensions \
     opcache
 
 # Get latest Composer
-COPY --from=composer:3 /usr/bin/composer /usr/bin/composer
+COPY --from=composer:2.5 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www
 
