@@ -12,3 +12,9 @@ up-db:
 
 logs:
 	docker compose logs -f
+
+composer-install:
+	docker compose exec php composer install
+
+php:
+	docker compose exec php sh
